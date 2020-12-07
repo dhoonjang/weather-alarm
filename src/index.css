@@ -1,4 +1,5 @@
 body {
+  position: relative;
   width: 360px;
   height: 600px;
   border: 1px solid black;
@@ -29,11 +30,13 @@ button {
   height: 30px;
 }
 
-.new_alarm_popup {
+.new_alarm_popup,
+.alarm_popup {
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: rgba(3, 3, 3, 0.05);
   top: 0;
   left: 0;
   width: 100%;
@@ -47,19 +50,32 @@ button {
   z-index: 1000;
 }
 
-.new_alarm_popup .content_box {
+.new_alarm_popup .content_box,
+.alarm_popup .content_box {
   padding: 30px 20px;
+  padding-bottom: 20px;
   width: 250px;
-  height: 100px;
   border-radius: 5px;
   border: solid 1px black;
   background-color: #fff;
   text-align: center;
 }
 
-.new_alarm_popup .content_box input {
+.new_alarm_popup .content_box .title_input {
   display: inline-block;
   width: 200px;
+  margin-left: 10px;
+}
+
+.new_alarm_popup .content_box .temp {
+  display: inline-block;
+  width: 91px;
+  margin-left: 10px;
+}
+
+.new_alarm_popup .content_box .rain {
+  display: inline-block;
+  width: 91px;
   margin-left: 10px;
 }
 

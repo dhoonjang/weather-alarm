@@ -1,7 +1,8 @@
-import React, { useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import alarmReducer, {
   EAlarmActionType,
   initialAlarmState,
+  weatherList,
 } from "./alarmReducer";
 import moment from "moment";
 
@@ -18,27 +19,93 @@ function App() {
           moment(a.date, "YYYY/MM/DD | hh:mm:ss").unix()
       );
 
-    return sortedAlarms.map((a, i) => {
-      return (
-        <div className="alarm_box" key={i}>
-          <button
-            className="delete-btn"
-            onClick={() =>
-              dispatch({ type: EAlarmActionType.removeAlarm, index: i })
-            }
-          >
-            X
-          </button>
-          <div className="title">제목: {a.title}</div>
-          <div className="policy">규칙: {a.policy}</div>
-          <div className="date">마지막 업데이트: {a.date}</div>
+    return sortedAlarms.map((a, index) => (
+      <div className="alarm_box" key={index}>
+        <button
+          className="delete-btn"
+          onClick={() =>
+            dispatch({ type: EAlarmActionType.removeAlarm, index })
+          }
+        >
+          X
+        </button>
+        <div className="title">제목: {a.title}</div>
+        <div className="policy">
+          규칙:{" "}
+          {a.policy.temp !== undefined
+            ? "온도 => " + a.policy.temp + "도"
+            : "강수확률 => " + a.policy.rainProbability + "%"}
         </div>
-      );
-    });
+        <div className="date">마지막 업데이트: {a.date}</div>
+      </div>
+    ));
   }, [state.alarms]);
+
+  useEffect(() => {
+    let index = 0;
+
+    const to = setInterval(() => {
+      if (index++ >= weatherList.length) index = 0;
+      dispatch({
+        type: EAlarmActionType.setWeather,
+        index: -1,
+        weather: weatherList[index],
+      });
+    }, 5000);
+
+    return () => {
+      clearInterval(to);
+    };
+  }, []);
 
   return (
     <div className="App">
+      {state.alarms[state.alarmIndex] && (
+        <div className="alarm_popup">
+          <div className="content_box">
+            <div className="title">
+              제목: {state.alarms[state.alarmIndex].title}
+            </div>
+            <div className="policy">
+              규칙:
+              {state.alarms[state.alarmIndex].policy.temp !== undefined
+                ? " 온도 => " +
+                  state.alarms[state.alarmIndex].policy.temp +
+                  "도"
+                : " 강수확률 => " +
+                  state.alarms[state.alarmIndex].policy.rainProbability +
+                  "%"}
+            </div>
+            <div className="weather">
+              온도: {state.currentWeather.current.temp}
+              {" -> "}
+              {state.currentWeather.forecast.temp}
+              <br />
+              강수확률: {state.currentWeather.forecast.rainProbability}%
+              <br />
+            </div>
+            <button
+              className="check_btn"
+              onClick={() =>
+                dispatch({ type: EAlarmActionType.checkAlarm, index: -1 })
+              }
+            >
+              확인
+            </button>
+            <button
+              className="delete_btn"
+              onClick={() =>
+                dispatch({
+                  type: EAlarmActionType.checkAlarm,
+                  index: state.alarmIndex,
+                })
+              }
+            >
+              알람 삭제
+            </button>
+          </div>
+        </div>
+      )}
       {state.newAlarm !== null && (
         <div className="new_alarm_popup">
           <div className="content_box">
@@ -46,7 +113,7 @@ function App() {
               제목
               <input
                 type="text"
-                className="title"
+                className="title_input"
                 value={state.newAlarm.title}
                 onChange={(e) =>
                   dispatch({
@@ -60,12 +127,38 @@ function App() {
             <div className="policy">
               규칙
               <input
-                type="text"
-                className="policy"
-                value={state.newAlarm.policy}
+                type="number"
+                placeholder="온도"
+                min={-50}
+                max={100}
+                className="temp"
+                value={
+                  state.newAlarm.policy.temp !== undefined
+                    ? state.newAlarm.policy.temp
+                    : ""
+                }
                 onChange={(e) =>
                   dispatch({
-                    type: EAlarmActionType.setPolicy,
+                    type: EAlarmActionType.setPolicyTemp,
+                    index: -1,
+                    value: e.currentTarget.value,
+                  })
+                }
+              />
+              <input
+                type="number"
+                placeholder="강수확률"
+                className="rain"
+                min={0}
+                max={100}
+                value={
+                  state.newAlarm.policy.rainProbability !== undefined
+                    ? state.newAlarm.policy.rainProbability
+                    : ""
+                }
+                onChange={(e) =>
+                  dispatch({
+                    type: EAlarmActionType.setPolicyRain,
                     index: -1,
                     value: e.currentTarget.value,
                   })
