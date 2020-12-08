@@ -51,7 +51,7 @@ function App() {
         index: -1,
         weather: weatherList[index],
       });
-    }, 5000);
+    }, 20000);
 
     return () => {
       clearInterval(to);

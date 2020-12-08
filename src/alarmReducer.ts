@@ -56,53 +56,43 @@ export const weatherList = [
       rainProbability: 0,
     },
     forecast: {
+      temp: 8,
+      rainProbability: 20,
+    },
+  },
+  {
+    current: {
+      temp: 8,
+      rainProbability: 20,
+    },
+    forecast: {
       temp: 10,
-      rainProbability: 10,
+      rainProbability: 3,
     },
   },
   {
     current: {
       temp: 10,
-      rainProbability: 10,
+      rainProbability: 3,
     },
     forecast: {
-      temp: 20,
-      rainProbability: 10,
-    },
-  },
-  {
-    current: {
-      temp: 20,
-      rainProbability: 10,
-    },
-    forecast: {
-      temp: 10,
-      rainProbability: 0,
-    },
-  },
-  {
-    current: {
-      temp: 10,
-      rainProbability: 0,
-    },
-    forecast: {
-      temp: 30,
+      temp: 4,
       rainProbability: 80,
     },
   },
   {
     current: {
-      temp: 30,
+      temp: 4,
       rainProbability: 80,
     },
     forecast: {
-      temp: 20,
+      temp: -10,
       rainProbability: 10,
     },
   },
   {
     current: {
-      temp: 20,
+      temp: -10,
       rainProbability: 10,
     },
     forecast: {
